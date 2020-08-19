@@ -6,19 +6,89 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+#if NETSTANDARD2_0 || NETCOREAPP3_0
 using System.Runtime.Loader;
+#endif
 
 
 namespace Natasha.Framework
 {
 
-    //#if NET472 || NET461 || NET462
-    //    public abstract class AssemblyLoadContext : Assembly
-    //    {
-    //        public readonly string Name;
-    //        public AssemblyLoadContext(string name,bool )
-    //    }
-    //#endif
+#if !NETSTANDARD2_0 && !NETCOREAPP3_0
+    public class AssemblyLoadContext
+    {
+        static AssemblyLoadContext()
+        {
+            Default = new AssemblyLoadContext("Default");
+        }
+
+        public static AssemblyLoadContext Default { get; private set; }
+        public AssemblyLoadContext(string name, bool isCollectible = false)
+        {
+            
+        }
+
+        public event Func<Assembly, string, IntPtr> ResolvingUnmanagedDll;
+        //
+        // 摘要:
+        //     Occurs when the System.Runtime.Loader.AssemblyLoadContext is unloaded.
+        public event Action<AssemblyLoadContext> Unloading;
+        //
+        // 摘要:
+        //     Occurs when the resolution of an assembly fails when attempting to load into
+        //     this assembly load context.
+        public event Func<AssemblyLoadContext, AssemblyName, Assembly> Resolving;
+        protected virtual Assembly Load(AssemblyName assemblyName)
+        {
+            return Assembly.Load(assemblyName);
+        }
+        //
+        // 摘要:
+        //     Allows derived class to load an unmanaged library by name.
+        //
+        // 参数:
+        //   unmanagedDllName:
+        //     Name of the unmanaged library. Typically this is the filename without its path
+        //     or extensions.
+        //
+        // 返回结果:
+        //     A handle to the loaded library, or System.IntPtr.Zero.
+        protected virtual IntPtr LoadUnmanagedDll(string unmanagedDllName)
+        {
+            return default;
+        }
+
+        protected IntPtr LoadUnmanagedDllFromPath(string unmanagedDllPath)
+        {
+            return default;
+        }
+
+        public Assembly LoadFromAssemblyName(AssemblyName assemblyName)
+        {
+            return Assembly.Load(assemblyName);
+        }
+
+        public Assembly LoadFromAssemblyPath(string assemblyPath)
+        {
+            return Assembly.LoadFile(assemblyPath);
+        }
+
+        public Assembly LoadFromNativeImagePath(string nativeImagePath, string assemblyPath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Assembly LoadFromStream(Stream assembly)
+        {
+
+            var buffer = new byte[assembly.Length];
+            assembly.Read(buffer, 0, buffer.Length);
+            return Assembly.Load(buffer);
+
+        }
+
+    }
+#endif
 
     /// <summary>
     /// 程序域的基础类，需要继承实现
@@ -54,14 +124,14 @@ namespace Natasha.Framework
         /// 存放文件过来的程序集与引用
         /// </summary>
         public readonly ConcurrentDictionary<string, PortableExecutableReference> ReferencesFromFile;
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NET461
         public string Name;
 #else
         public readonly static Func<AssemblyDependencyResolver, Dictionary<string, string>> GetDictionary;
 #endif
         static DomainBase()
         {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
             //从依赖中拿到所有的路径，该属性未开放
             var methodInfo = typeof(AssemblyDependencyResolver).GetField("_assemblyPaths", BindingFlags.NonPublic | BindingFlags.Instance);
             GetDictionary = item => (Dictionary<string, string>)methodInfo.GetValue(item);
@@ -95,7 +165,7 @@ namespace Natasha.Framework
 #endif
 
         {
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NET461
             Name = key;
 #endif
             DllAssemblies = new ConcurrentDictionary<string, Assembly>();
@@ -252,7 +322,7 @@ namespace Natasha.Framework
         /// </summary>
         public virtual void Dispose()
         {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
             DependencyResolver = null;
 #endif
             DllAssemblies.Clear();
@@ -392,7 +462,7 @@ namespace Natasha.Framework
 
 
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
         public AssemblyDependencyResolver DependencyResolver;
 #endif
         /// <summary>
@@ -406,7 +476,7 @@ namespace Natasha.Framework
             if (excludePaths.Length == 0)
             {
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
 
                 DependencyResolver = new AssemblyDependencyResolver(path);
                 var newMapping = GetDictionary(DependencyResolver);
@@ -432,7 +502,7 @@ namespace Natasha.Framework
                     exclude = new HashSet<string>(excludePaths);
                 }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
 
                 DependencyResolver = new AssemblyDependencyResolver(path);
                 var newMapping = GetDictionary(DependencyResolver);

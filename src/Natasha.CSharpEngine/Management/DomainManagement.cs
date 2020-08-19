@@ -5,7 +5,9 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+#if   !NET461
 using static System.Runtime.Loader.AssemblyLoadContext;
+#endif
 
 
 public class DomainManagement
@@ -82,7 +84,7 @@ public class DomainManagement
     }
 
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
         public static ContextualReflectionScope Lock(string key)
         {
             if (Cache.ContainsKey(key))

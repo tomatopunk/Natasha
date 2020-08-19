@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+#if  !NET461
 using System.Runtime.Loader;
+#endif
 
 /// <summary>
 /// Natasha域实现
@@ -19,7 +21,7 @@ public class NatashaAssemblyDomain : DomainBase
         return _usingsTemplate._usings;
     }
 
-    #region 加载程序集
+#region 加载程序集
     /// <summary>
     /// 从外部文件获取程序集，并添加引用信息
     /// </summary>
@@ -65,10 +67,10 @@ public class NatashaAssemblyDomain : DomainBase
             return assembly;
         }
     }
-    #endregion
+#endregion
 
 
-    #region 加载插件
+#region 加载插件
 
 
     /// <summary>
@@ -123,7 +125,7 @@ public class NatashaAssemblyDomain : DomainBase
         }
 
     }
-    #endregion
+#endregion
 
 
     /// <summary>
@@ -199,7 +201,7 @@ public class NatashaAssemblyDomain : DomainBase
 
     }
 
-    #region 编译成功事件
+#region 编译成功事件
     /// <summary>
     /// 当拿到动态编译生成的文件时调用
     /// </summary>
@@ -223,14 +225,14 @@ public class NatashaAssemblyDomain : DomainBase
     {
         return LoadAssemblyFromStream(stream);
     }
-    #endregion
+#endregion
 
 
 
     public NatashaAssemblyDomain(string key) : base(key)
     {
         UseNewVersionAssmebly = true;
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
         DependencyResolver = new AssemblyDependencyResolver(AppDomain.CurrentDomain.BaseDirectory);
 #endif
         _usingsTemplate = new UsingTemplate();
@@ -273,7 +275,7 @@ public class NatashaAssemblyDomain : DomainBase
     /// <returns></returns>
     protected override Assembly Load(AssemblyName assemblyName)
     {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
         string assemblyPath = DependencyResolver.ResolveAssemblyToPath(assemblyName);
         if (assemblyPath != null)
         {
@@ -295,7 +297,7 @@ public class NatashaAssemblyDomain : DomainBase
     /// <returns></returns>
     protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
     {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
         string libraryPath = DependencyResolver.ResolveUnmanagedDllToPath(unmanagedDllName);
         if (libraryPath != null)
         {

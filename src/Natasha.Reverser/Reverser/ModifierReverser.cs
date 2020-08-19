@@ -211,7 +211,7 @@ namespace Natasha.Reverser
 
             }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
             else if (info.IsValueType)
             {
 
