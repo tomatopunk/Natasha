@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -18,6 +19,7 @@ namespace Natasha
 
             DefaultScript = new StringBuilder();
             DefaultNamesapce = new HashSet<string>();
+#if !NET461
             var assemblyNames = DependencyContext.Default.GetDefaultAssemblyNames();
             foreach (var name in assemblyNames)
             {
@@ -52,17 +54,85 @@ namespace Natasha
                 }
 
             }
-
-            var entryTypes = Assembly.GetEntryAssembly().GetTypes();
-            foreach (var item in entryTypes)
+#else
+            var assemblyNames = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblyNames)
             {
 
-                if (!DefaultNamesapce.Contains(item.Namespace) && item.Namespace != default)
+                if (assembly != default)
                 {
-                    DefaultNamesapce.Add(item.Namespace);
+
+                    try
+                    {
+
+                        var types = assembly.GetTypes();
+                        foreach (var item in types)
+                        {
+
+                            if (!DefaultNamesapce.Contains(item.Namespace) && item.Namespace != default)
+                            {
+                                DefaultNamesapce.Add(item.Namespace);
+                            }
+
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+
+
+
+                    }
+
+
                 }
 
             }
+#endif
+
+
+            if (Assembly.GetEntryAssembly()!=null)
+            {
+                var entryTypes = Assembly.GetEntryAssembly().GetTypes();
+                foreach (var item in entryTypes)
+                {
+
+                    if (!DefaultNamesapce.Contains(item.Namespace) && item.Namespace != default)
+                    {
+                        DefaultNamesapce.Add(item.Namespace);
+                    }
+
+                }
+            }
+
+            if (Assembly.GetExecutingAssembly() != null)
+            {
+                var entryTypes = Assembly.GetExecutingAssembly().GetTypes();
+                foreach (var item in entryTypes)
+                {
+
+                    if (!DefaultNamesapce.Contains(item.Namespace) && item.Namespace != default)
+                    {
+                        DefaultNamesapce.Add(item.Namespace);
+                    }
+
+                }
+            }
+
+            if (Assembly.GetCallingAssembly() != null)
+            {
+                var entryTypes = Assembly.GetCallingAssembly().GetTypes();
+                foreach (var item in entryTypes)
+                {
+
+                    if (!DefaultNamesapce.Contains(item.Namespace) && item.Namespace != default)
+                    {
+                        DefaultNamesapce.Add(item.Namespace);
+                    }
+
+                }
+            }
+
 
             foreach (var @using in DefaultNamesapce)
             {

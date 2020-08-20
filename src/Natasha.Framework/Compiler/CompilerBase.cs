@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Reflection;
+#if !NET461
 using System.Runtime.Loader;
-
+#endif
 namespace Natasha.Framework
 {
     public abstract class CompilerBase<TCompilation, TCompilationOptions> where TCompilation : Compilation where TCompilationOptions : CompilationOptions
@@ -36,7 +37,7 @@ namespace Natasha.Framework
             {
                 if (_domain == null)
                 {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET461
                     if (AssemblyLoadContext.CurrentContextualReflectionContext != default)
                     {
                         _domain = (DomainBase)(AssemblyLoadContext.CurrentContextualReflectionContext);

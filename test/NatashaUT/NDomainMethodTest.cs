@@ -91,7 +91,7 @@ namespace NatashaUT
         public void UnloadDelegate()
         {
             Assert.Equal(3, RunDelegate6());
-#if !NETCOREAPP2_2
+#if !NETCOREAPP2_2 && !NET461
             for (int i = 0; i < 6; i++)
             {
                 GC.Collect();
@@ -137,13 +137,13 @@ namespace NatashaUT
         }
 
 
-        [Fact(DisplayName = "委托比域")]
-        public void TestDelegateEqual()
-        {
-            var domain = DomainManagement.Random;
-            var action = NDelegate.UseDomain(domain).Action(
-                @"int i = 1+1;");
-            Assert.Equal(domain, action.GetDomain());
-        }
+        //[Fact(DisplayName = "委托比域")]
+        //public void TestDelegateEqual()
+        //{
+        //    var domain = DomainManagement.Random;
+        //    var action = NDelegate.UseDomain(domain).Action(
+        //        @"int i = 1+1;");
+        //    Assert.Equal(domain, action.GetDomain());
+        //}
     }
 }

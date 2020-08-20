@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0;netcoreapp3.0;</TargetFrameworks>
+    <TargetFrameworks>NET461;netstandard2.0;netcoreapp3.0;</TargetFrameworks>
     <Description>Natasha 编译框架以及各个操作类的标准</Description>
     <PackageId>DotNetCore.Natasha.Framework</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>

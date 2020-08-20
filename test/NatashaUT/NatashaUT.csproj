@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;</TargetFrameworks>
+    <TargetFrameworks>NET461</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
@@ -64,7 +64,6 @@
 
   
   <ItemGroup>
-    <PackageReference Include="DotNetCore.Compile.Environment" Version="2.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
@@ -76,8 +75,11 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\Natasha.CSharpComplier\Natasha.CSharpCompiler.csproj" />
+    <ProjectReference Include="..\..\src\Natasha.CSharpEngine\Natasha.CSharpEngine.csproj" />
     <ProjectReference Include="..\..\src\Natasha.CSharpSyntax\Natasha.CSharpSyntax.csproj" />
     <ProjectReference Include="..\..\src\Natasha.Domain\Natasha.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Natasha.Framework\Natasha.Framework.csproj" />
+    <ProjectReference Include="..\..\src\Natasha.Reverser\Natasha.Reverser.csproj" />
     <ProjectReference Include="..\..\src\Natasha\Natasha.csproj" />
   </ItemGroup>
 

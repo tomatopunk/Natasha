@@ -35,6 +35,7 @@ public class DomainManagement
         CreateDomain = (Func<string, DomainBase>)(method.CreateDelegate(typeof(Func<string, DomainBase>)));
 
         Default = CreateDomain("Default");
+#if !NET461
         foreach (var asm in DependencyContext
         .Default
         .CompileLibraries
@@ -42,8 +43,17 @@ public class DomainManagement
         {
             Default.AddReferencesFromDllFile(asm);
         }
+#else
+        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            if (!asm.IsDynamic && asm.Location!=default && asm.Location !="")
+            {
+                Default.AddReferencesFromDllFile(asm.Location);
+            }
+            
+        }
 
-
+#endif
         return (TDomain)Default;
 
     }

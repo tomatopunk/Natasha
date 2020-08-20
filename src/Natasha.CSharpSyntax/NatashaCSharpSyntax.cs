@@ -87,11 +87,12 @@ public class NatashaCSharpSyntax : SyntaxBase
     /// <returns></returns>
     public override SyntaxTree LoadTree(SyntaxTree tree)
     {
-        
+#if !NET461
         using (var workspace = new AdhocWorkspace())
         {
             tree = Formatter.Format(tree.GetRoot(), workspace).SyntaxTree;
         }
+#endif
         return tree;
 
     }

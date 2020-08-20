@@ -20,7 +20,7 @@ namespace NatashaUT
         public void Test1()
         {
 
-#if !NETCOREAPP2_2
+#if !NETCOREAPP2_2  && !NET461
             lock (obj)
             {
                 using (DomainManagement.CreateAndLock("TestSame"))
@@ -58,7 +58,7 @@ namespace NatashaUT
         public void Test2()
         {
 
-#if !NETCOREAPP2_2
+#if !NETCOREAPP2_2 && !NET461
             using (DomainManagement.CreateAndLock("Default1"))
             {
 
@@ -100,7 +100,7 @@ namespace NatashaUT
         public void Test3()
         {
 
-#if !NETCOREAPP2_2
+#if !NETCOREAPP2_2 && !NET461
             NSucceedLog.Enabled = true;
             using (DomainManagement.CreateAndLock("Default2"))
             {
@@ -140,7 +140,7 @@ namespace NatashaUT
         public void Test4()
         {
 
-#if !NETCOREAPP2_2
+#if !NETCOREAPP2_2 && !NET461
             lock (obj)
             {
                 Assembly result1;

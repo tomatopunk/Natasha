@@ -15,7 +15,7 @@ namespace NET461
             NatashaComponentRegister.RegistCompiler<NatashaCSharpCompiler>();
             NatashaComponentRegister.RegistSyntax<NatashaCSharpSyntax>();
 
-            var action = NDelegate.RandomDomain().Action("Console.WriteLine(\"Hello world!\")");
+            var action = NDelegate.RandomDomain().Action("Console.WriteLine(\"Hello world!\");");
             action();
 
             Console.ReadKey();
